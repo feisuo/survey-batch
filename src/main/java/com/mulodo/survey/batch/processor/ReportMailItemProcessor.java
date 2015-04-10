@@ -20,27 +20,32 @@ import java.util.Date;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.mail.SimpleMailMessage;
 
-import com.mulodo.survey.pojo.Manager;
+import com.mulodo.survey.pojo.ReportManager;
 
 /**
  * @author Dan Garrette
  * @author Dave Syer
  * @since 2.1
  */
-public class ManagerMailItemProcessor implements ItemProcessor<Manager, SimpleMailMessage>
+public class ReportMailItemProcessor implements ItemProcessor<ReportManager, SimpleMailMessage>
 {
 
     /**
      * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
      */
     @Override
-    public SimpleMailMessage process(Manager manager) throws Exception
+    public SimpleMailMessage process(ReportManager report) throws Exception
     {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(manager.getEmail());
-        message.setSubject(manager.getFullname() + "'s Account Info");
+        message.setFrom("repost_survey@yahoo.com.vn");
+        message.setTo(report.getEmail());
+        message.setSubject("Daily report");
         message.setSentDate(new Date());
-        message.setText("Hello " + manager.getFullname());
+        // Set content
+        message.setText(report.createReport());
+        
+        System.out.println(message.getText());
+
         return message;
     }
 }
