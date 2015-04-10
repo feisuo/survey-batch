@@ -1,7 +1,6 @@
 package com.mulodo.survey.batch.tasklet;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -37,7 +36,12 @@ public class SurveyBackupTasklet implements Tasklet
 
         File[] files = fromFolder.listFiles();
 
+        File desFile;
         for (File file : files) {
+            desFile = new File(toFolder, file.getName());
+            if (desFile.exists()) {
+                desFile.delete();
+            }
             FileUtils.moveFileToDirectory(file, toFolder, false);
         }
 

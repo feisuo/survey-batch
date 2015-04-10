@@ -91,7 +91,7 @@
 
 	<bean id="multiResourceItemReader"
 		class="org.springframework.batch.item.file.MultiResourceItemReader">
-		<property name="resources" value="classpath:input/csv/*.csv" />
+		<property name="resources" value="file:${csv_folder}/*.csv" />
 		<property name="delegate" ref="cvsFileItemReader" />
 	</bean>
 
@@ -190,7 +190,7 @@
 		<property name="host" value="smtp.mail.yahoo.com" />
 		<property name="port" value="587" />
 		<property name="username" value="repost_survey@yahoo.com.vn" />
-		<property name="password" value="matkhau1231" />
+		<property name="password" value="matkhau123" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
