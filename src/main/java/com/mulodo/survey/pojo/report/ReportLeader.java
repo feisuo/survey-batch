@@ -1,4 +1,4 @@
-package com.mulodo.survey.pojo;
+package com.mulodo.survey.pojo.report;
 
 import com.mulodo.survey.util.Util;
 
@@ -22,6 +22,7 @@ public class ReportLeader extends ReportManager
         sb.append(team);
         sb.append(" is: ");
         sb.append(this.getSurveyNumber());
+        sb.append("\nThis is auto mail. PLease don't reply!");
 
         return sb.toString();
     }

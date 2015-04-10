@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:property-placeholder location="classpath:/database.properties" />
+	<context:property-placeholder location="classpath:/config.properties" />
 
 	<import resource="context.xml" />
 	<import resource="dataSource.xml" />
@@ -17,56 +17,114 @@
 
 	<bean id="itemProcessor" class="com.mulodo.survey.batch.processor.SurveyItemProcessor" />
 
-
 	<batch:job id="surveyReport">
-		<!-- <batch:step id="step1" next="step2"> <batch:tasklet> <batch:chunk 
-			reader="cvsFileItemReader" writer="hibernatesurveyWriter" processor="itemProcessor" 
-			commit-interval="10"> </batch:chunk> </batch:tasklet> </batch:step> -->
-		<batch:step id="reportLeader" next="reportManager">
-			<batch:tasklet>
-				<batch:chunk reader="leaderItemReader" writer="mailItemWriter"
-					processor="mailItemProcessor" commit-interval="5">
-				</batch:chunk>
-			</batch:tasklet>
-		</batch:step>
-		<batch:step id="reportManager">
-			<batch:tasklet>
-				<batch:chunk reader="managerItemReader" writer="mailItemWriter"
-					processor="mailItemProcessor" commit-interval="5">
-				</batch:chunk>
-			</batch:tasklet>
+
+
+		<batch:step id="deacompressData">
+			<batch:tasklet ref="deacompressTasklet" />
+			<batch:next on="COMPLETED" to="importData" />
+			<batch:next on="*" to="reportError" />
 		</batch:step>
 
+		<batch:step id="importData">
+			<batch:tasklet>
+				<batch:chunk reader="multiResourceItemReader" writer="hibernatesurveyWriter"
+					processor="itemProcessor" commit-interval="10" skip-limit="100"
+					retry-limit="3">
+
+					<batch:skippable-exception-classes>
+						<batch:include
+							class="org.springframework.batch.item.file.FlatFileParseException" />
+						<batch:include class="java.io.FileNotFoundException" />
+						<batch:include class="org.hibernate.exception.JDBCConnectionException" />
+					</batch:skippable-exception-classes>
+					<batch:retryable-exception-classes>
+						<batch:include
+							class="org.springframework.dao.DeadlockLoserDataAccessException" />
+					</batch:retryable-exception-classes>
+
+				</batch:chunk>
+			</batch:tasklet>
+			<batch:next on="COMPLETED" to="backupAndReport" />
+			<batch:next on="*" to="reportError" />
+		</batch:step>
+
+		<batch:split id="backupAndReport">
+			<batch:flow>
+				<batch:step id="backupStep">
+					<batch:tasklet ref="backupTasklet" />
+				</batch:step>
+			</batch:flow>
+
+			<batch:flow>
+				<batch:step id="reportLeader" next="reportManager">
+					<batch:tasklet>
+						<batch:chunk reader="leaderItemReader" writer="mailItemWriter"
+							processor="mailItemProcessor" commit-interval="5">
+						</batch:chunk>
+					</batch:tasklet>
+				</batch:step>
+
+				<batch:step id="reportManager">
+					<batch:tasklet>
+						<batch:chunk reader="managerItemReader" writer="mailItemWriter"
+							processor="mailItemProcessor" commit-interval="5">
+						</batch:chunk>
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+		</batch:split>
+
+		<batch:step id="reportError">
+			<batch:tasklet>
+				<batch:chunk reader="errorItemReader" writer="mailItemWriter"
+					processor="mailItemProcessor" commit-interval="5">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
 	</batch:job>
 
+	<bean id="deacompressTasklet" class="com.mulodo.survey.batch.tasklet.SurveyDecompressTasklet">
+		<property name="resource" value="file:${zip_folder}" />
+		<property name="targetDirectory" value="${csv_folder}" />
+	</bean>
+
+	<bean id="multiResourceItemReader"
+		class="org.springframework.batch.item.file.MultiResourceItemReader">
+		<property name="resources" value="classpath:input/csv/*.csv" />
+		<property name="delegate" ref="cvsFileItemReader" />
+	</bean>
+
 	<bean id="cvsFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
-
-		<property name="resource" value="classpath:input/report.csv" />
-
 		<property name="lineMapper">
 			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
 				<property name="lineTokenizer">
 					<bean
 						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-						<property name="names"
-							value="description,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10" />
+						<property name="names" value="id_employee, description, s1, s2, s3" />
 					</bean>
 				</property>
 				<property name="fieldSetMapper">
 					<bean class="com.mulodo.survey.batch.mapper.SurveyFieldSetMapper" />
 				</property>
+				<!-- <property name="fieldSetMapper"> -->
+				<!-- <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper"> -->
+				<!-- <property name="prototypeBeanName" value="surveys"> -->
+				<!-- </property> -->
+				<!-- </bean> -->
+				<!-- </property> -->
 			</bean>
 		</property>
-
 	</bean>
 
-	<bean id="survayDao" class="com.mulodo.survey.batch.dao.impl.SurvayDaoImpl">
-		<property name="sf" ref="sessionFactory" />
+	<bean id="backupTasklet" class="com.mulodo.survey.batch.tasklet.SurveyBackupTasklet">
+		<property name="fromDirectory" value="file:${csv_folder}" />
+		<property name="toDirectory" value="file:${backup_folder}" />
 	</bean>
 
-	<bean id="hibernatesurveyWriter" class="com.mulodo.survey.batch.writer.SurveyItemWriter">
-		<property name="sf" ref="sessionFactory" />
-		<property name="dao" ref="survayDao" />
+	<bean id="hibernatesurveyWriter"
+		class="org.springframework.batch.item.database.HibernateItemWriter">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
@@ -83,26 +141,38 @@
 		</property>
 	</bean>
 
-	<bean id="managerItemReader"
-		class="org.springframework.batch.item.database.JdbcCursorItemReader">
-		<property name="sql" value="${manager_sql}" />
-		<property name="rowMapper">
-			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
-				<property name="mappedClass" value="com.mulodo.survey.pojo.ReportManager" />
-			</bean>
-		</property>
+	<bean id="jdbcAbtractItemReader"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		abstract="true">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="leaderItemReader"
-		class="org.springframework.batch.item.database.JdbcCursorItemReader">
+	<bean id="leaderItemReader" parent="jdbcAbtractItemReader">
 		<property name="sql" value="${leader_sql}" />
 		<property name="rowMapper">
 			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
-				<property name="mappedClass" value="com.mulodo.survey.pojo.ReportLeader" />
+				<property name="mappedClass" value="com.mulodo.survey.pojo.report.ReportLeader" />
 			</bean>
 		</property>
-		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="managerItemReader" parent="jdbcAbtractItemReader">
+		<property name="sql" value="${manager_sql}" />
+		<property name="rowMapper">
+			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+				<property name="mappedClass"
+					value="com.mulodo.survey.pojo.report.ReportManager" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="errorItemReader" parent="jdbcAbtractItemReader">
+		<property name="sql" value="${error_sql}" />
+		<property name="rowMapper">
+			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+				<property name="mappedClass" value="com.mulodo.survey.pojo.report.ReportError" />
+			</bean>
+		</property>
 	</bean>
 
 	<bean id="mailItemWriter"
@@ -120,7 +190,7 @@
 		<property name="host" value="smtp.mail.yahoo.com" />
 		<property name="port" value="587" />
 		<property name="username" value="repost_survey@yahoo.com.vn" />
-		<property name="password" value="matkhau123" />
+		<property name="password" value="matkhau1231" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
@@ -130,8 +200,4 @@
 			</props>
 		</property>
 	</bean>
-
-	<!-- <bean id="sendMailService" class="com.mulodo.survey.batch.mail.SendMailService" 
-		/> -->
-
 </beans>

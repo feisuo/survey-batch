@@ -21,8 +21,6 @@ public class SurveyItemProcessor implements ItemProcessor<Survey, Survey>
         // Set current date
         item.setDate(new Date());
 
-        System.out.println(item.getDate() + " " + item.getS1());
-
         return item;
     }
 }

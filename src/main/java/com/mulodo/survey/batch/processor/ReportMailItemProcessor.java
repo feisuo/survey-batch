@@ -20,21 +20,21 @@ import java.util.Date;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.mail.SimpleMailMessage;
 
-import com.mulodo.survey.pojo.ReportManager;
+import com.mulodo.survey.pojo.report.Report;
 
 /**
  * @author Dan Garrette
  * @author Dave Syer
  * @since 2.1
  */
-public class ReportMailItemProcessor implements ItemProcessor<ReportManager, SimpleMailMessage>
+public class ReportMailItemProcessor implements ItemProcessor<Report, SimpleMailMessage>
 {
 
     /**
      * @see org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
      */
     @Override
-    public SimpleMailMessage process(ReportManager report) throws Exception
+    public SimpleMailMessage process(Report report) throws Exception
     {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("repost_survey@yahoo.com.vn");
@@ -43,7 +43,7 @@ public class ReportMailItemProcessor implements ItemProcessor<ReportManager, Sim
         message.setSentDate(new Date());
         // Set content
         message.setText(report.createReport());
-        
+
         System.out.println(message.getText());
 
         return message;

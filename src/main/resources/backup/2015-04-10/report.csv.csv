@@ -1,0 +1,11 @@
+#id_employee, description, s1, s2, s3
+0001, aaaaabbbbbbcccccc, a, a, a
+0001, aaaaaaaaaaaaaaaaa, b, a, c
+0001, Fire in the hole, a, b, c
+0001, Go Go Go, a, c, c
+0001, Flashbang, c, c, c
+0001, Headshot, c, b,c
+0001, All out of attack, a, c ,b
+0001, Change Position, b, b, c
+0001, Stay back, c, c, a
+0001, Kick ass, c, a, c

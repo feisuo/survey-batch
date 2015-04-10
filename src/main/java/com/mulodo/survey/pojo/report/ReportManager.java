@@ -1,49 +1,14 @@
-package com.mulodo.survey.pojo;
+package com.mulodo.survey.pojo.report;
 
 import java.util.Date;
 
 import com.mulodo.survey.util.Util;
 
-public class ReportManager
+public class ReportManager extends ReportError
 {
-    protected String fullname;
-    protected String email;
+
     protected int surveyNumber;
     protected Date createDate;
-
-    /**
-     * @return the fullname
-     */
-    public String getFullname()
-    {
-        return fullname;
-    }
-
-    /**
-     * @param fullname
-     *            the fullname to set
-     */
-    public void setFullname(String fullname)
-    {
-        this.fullname = fullname;
-    }
-
-    /**
-     * @return the email
-     */
-    public String getEmail()
-    {
-        return email;
-    }
-
-    /**
-     * @param email
-     *            the email to set
-     */
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
 
     /**
      * @return the surveyNumber
@@ -79,6 +44,7 @@ public class ReportManager
         this.createDate = createDate;
     }
 
+    @Override
     public String createReport()
     {
         StringBuilder sb = new StringBuilder();
@@ -92,6 +58,7 @@ public class ReportManager
         sb.append(":\n");
         sb.append("Total surveys is: ");
         sb.append(this.surveyNumber);
+        sb.append("\nThis is auto mail. PLease don't reply!");
 
         return sb.toString();
     }
