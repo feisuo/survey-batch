@@ -57,6 +57,12 @@
 			</batch:flow>
 
 			<batch:flow>
+				<batch:step id="cleanupStep">
+					<batch:tasklet ref="cleanupTasklet" />
+				</batch:step>
+			</batch:flow>
+
+			<batch:flow>
 				<batch:step id="reportLeader" next="reportManager">
 					<batch:tasklet>
 						<batch:chunk reader="leaderItemReader" writer="mailItemWriter"
@@ -118,8 +124,12 @@
 	</bean>
 
 	<bean id="backupTasklet" class="com.mulodo.survey.batch.tasklet.SurveyBackupTasklet">
-		<property name="fromDirectory" value="file:${csv_folder}" />
+		<property name="fromDirectory" value="file:${zip_folder}" />
 		<property name="toDirectory" value="file:${backup_folder}" />
+	</bean>
+
+	<bean id="cleanupTasklet" class="com.mulodo.survey.batch.tasklet.SurveyCleanupTasklet">
+		<property name="cleanupDirectory" value="${csv_folder}" />
 	</bean>
 
 	<bean id="hibernatesurveyWriter"
