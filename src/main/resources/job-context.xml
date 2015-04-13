@@ -89,7 +89,7 @@
 		<property name="targetDirectory" value="${csv_folder}" />
 	</bean>
 
-	<bean id="multiResourceItemReader"
+	<bean id="multiResourceItemReader" scope="step"
 		class="org.springframework.batch.item.file.MultiResourceItemReader">
 		<property name="resources" value="file:${csv_folder}/*.csv" />
 		<property name="delegate" ref="cvsFileItemReader" />
