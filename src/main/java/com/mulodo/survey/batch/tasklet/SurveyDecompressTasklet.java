@@ -19,9 +19,9 @@ import org.springframework.core.io.Resource;
 
 public class SurveyDecompressTasklet implements Tasklet {
 
-	private Resource resource;
-	private String targetDirectory;
-	private static final String ZIPFILE = "zip";
+	private Resource resource; // URL link of folder contain file(s) that will be decompressed.
+	private String targetDirectory;//Folder contains some decompressed file(s).
+	private static final String ZIPFILE = "zip";//Extension name of file that will be decompressed.
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution,
