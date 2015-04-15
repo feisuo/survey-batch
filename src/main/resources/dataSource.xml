@@ -27,7 +27,7 @@
 
 	<jdbc:initialize-database data-source="dataSourceJobRepo">
 		<jdbc:script
-			location="org/springframework/batch/core/schema-drop-postgresql.sql" />
-		<jdbc:script location="org/springframework/batch/core/schema-postgresql.sql" />
+			location="${job_repo.create_script}" />
+		<jdbc:script location="${job_repo.drop_script}" />
 	</jdbc:initialize-database>
 </beans>

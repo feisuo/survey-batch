@@ -9,7 +9,7 @@
 		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
 		<property name="dataSource" ref="dataSourceJobRepo" />
 		<property name="transactionManager" ref="transactionManager" />
-		<property name="databaseType" value="postgres" />
+		<property name="databaseType" value="${job_repo.databaseType}" />
 	</bean>
 
 	<bean id="transactionManager"
