@@ -1,40 +1,43 @@
-drop table if exists employee cascade;
+DROP TABLE IF EXISTS employee CASCADE;
 
-drop table if exists leaders cascade;
 
-drop table if exists managers cascade;
+DROP TABLE IF EXISTS leaders CASCADE;
 
-drop table if exists surveys cascade;
 
-create table employee (
-    id  serial not null,
-    fullname varchar(128) not null,
-    team int4 not null,
-    primary key (id)
-);
+DROP TABLE IF EXISTS managers CASCADE;
 
-create table leaders (
-    id  serial not null,
-    email varchar(256) not null,
-    fullname varchar(128) not null,
-    team int4 not null,
-    primary key (id)
-);
 
-create table managers (
-    id  serial not null,
-    email varchar(256) not null,
-    fullname varchar(128) not null,
-    primary key (id)
-);
+DROP TABLE IF EXISTS surveys CASCADE;
 
-create table surveys (
-    id  serial not null,
-    createDate date,
-    description varchar(128) not null,
-    employee_id int4 not null,
-    s1 char(1) not null,
-    s2 char(1),
-    s3 char(1),
-    primary key (id)
-);
+
+CREATE TABLE employee ( id serial NOT NULL, fullname varchar(128) NOT NULL, team int4 NOT NULL, PRIMARY KEY (id));
+
+
+CREATE TABLE leaders ( id serial NOT NULL, email varchar(256) NOT NULL, fullname varchar(128) NOT NULL, team int4 NOT NULL, PRIMARY KEY (id));
+
+
+CREATE TABLE managers ( id serial NOT NULL, email varchar(256) NOT NULL, fullname varchar(128) NOT NULL, PRIMARY KEY (id));
+
+
+CREATE TABLE surveys ( id serial NOT NULL, createDate date, description varchar(128) NOT NULL, employee_id int4 NOT NULL, s1 char(1) NOT NULL, s2 char(1), s3 char(1), PRIMARY KEY (id));
+
+
+INSERT INTO leaders(email, fullname, team)
+VALUES('le.dong@mulodo.com', 'Dong Le', 1),
+		('tran.nha@mulodo.com', 'Nha Tran', 2),
+		('dang.huy@mulodo.com', 'Huy Dang', 3);
+
+
+INSERT INTO managers(email, fullname)
+VALUES('le.tri@mulodo.com', 'Tri Le'),
+		('vo.quang@mulodo.com', 'Quang Vo');
+
+
+INSERT INTO employee(fullname,team)
+VALUES('AAAAA', 1),
+		('BBBB', 2),
+		('CCCC', 1),
+		('DDDD', 2),
+		('cccb', 3),
+		('rrrt', 3),
+		('bdbd', 3);
