@@ -8,7 +8,7 @@
 	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
 		<property name="location"> <value>database.properties</value> </property> 
 		</bean> -->
-
+	<!--- Initialize "dataSource" bean --->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${ds.driver}" />
@@ -16,7 +16,7 @@
 		<property name="username" value="${ds.username}" />
 		<property name="password" value="${ds.password}" />
 	</bean>
-
+	<!--- Create "dataSourceJobRepo" bean for storing anything about Spring Batch (Job/Step Execution, context, etc) --->
 	<bean id="dataSourceJobRepo" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${ds.driver}" />
@@ -24,7 +24,7 @@
 		<property name="username" value="${ds.username}" />
 		<property name="password" value="${ds.password}" />
 	</bean>
-
+	<!-- This is sql script of "dataSourceJobRepo" that Spring Batch already provide us -->
 	<jdbc:initialize-database data-source="dataSourceJobRepo">
 		<jdbc:script
 			location="org/springframework/batch/core/schema-drop-postgresql.sql" />

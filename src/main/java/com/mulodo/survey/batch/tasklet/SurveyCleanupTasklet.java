@@ -15,7 +15,7 @@ import org.springframework.batch.repeat.RepeatStatus;
  */
 public class SurveyCleanupTasklet implements Tasklet
 {
-
+	// cleanupDirectory is folder name that we want to clean up
     private String cleanupDirectory;
 
     /*

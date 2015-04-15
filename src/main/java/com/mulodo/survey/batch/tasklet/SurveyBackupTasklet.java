@@ -14,8 +14,9 @@ import com.mulodo.survey.util.Util;
 
 public class SurveyBackupTasklet implements Tasklet
 {
-
+	// fromDirectory is folder that contain zip file
     private Resource fromDirectory;
+    // toDirectory is folder that we want to move
     private Resource toDirectory;
 
     @Override

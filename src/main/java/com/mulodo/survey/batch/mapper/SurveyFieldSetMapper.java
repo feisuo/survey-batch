@@ -14,12 +14,13 @@ import com.mulodo.survey.pojo.Survey;
  */
 public class SurveyFieldSetMapper implements FieldSetMapper<Survey>
 {
-
+	
     @Override
     public Survey mapFieldSet(FieldSet fieldSet) throws BindException
     {
+    	// FieldSet that have initialized in names property of
+    	// DelimitedLineTokenizer (that extends abstract class AbstractLineTokenizer).
         Survey survey = new Survey();
-
         survey.setId_employee(fieldSet.readInt("id_employee"));
         survey.setDescription(fieldSet.readString("description"));
         survey.setS1(fieldSet.readChar("s1"));
