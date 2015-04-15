@@ -2,7 +2,7 @@
 Import survey data to DB and generate report and sent report via email
 Flow
 =========================================
-![alt tag](https://raw.githubusercontent.com/thanhtrixx/spring-batch-simple/master/Survey.jpg)
+![alt tag](https://raw.githubusercontent.com/le-tri-mulodo/survey-batch/master/Survey.jpg)
 Build, set up & run
 =========================================
 **survey-batch** use `Spring Batch` & `Maven` to minimize spend coding time.
