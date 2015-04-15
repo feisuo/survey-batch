@@ -3,13 +3,10 @@ Import survey data to DB and generate report and sent report via email
 Flow
 =========================================
 ![alt tag](https://raw.githubusercontent.com/le-tri-mulodo/survey-batch/master/Survey.jpg)
-Build, set up & run
+Set up, build & run
 =========================================
 **survey-batch** use `Spring Batch` & `Maven` to minimize spend coding time.
-## Build
-To build, execute from the top level directory:
 
-  `$ mvn clean install`
 ## Setup
 Open `config.properties` and config.
   + Config values for the datasource:
@@ -30,6 +27,10 @@ Open `config.properties` and config.
   + Create schemas for store survey data and job repository
   + Execute `survey_create.sql` script to create tables need to run program
 
+## Build
+To build, execute from the top level directory:
+
+  `$ mvn clean install`
 ## Run
 
   `$ java -Djava.awt.headless=true -jar target/survey.jar`
