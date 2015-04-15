@@ -53,11 +53,11 @@
 			<batch:next on="COMPLETED" to="backupAndReport" />
 			<batch:next on="*" to="reportError" />
 		</batch:step>
-		<!--- In this "backupAndReport" split, it has 3 step for doing 3 different tasks --->
-		<!--- that are "backupStep", "cleanupStep" and "reportLeader"/"reportManager". --->
+		<!-- In this "backupAndReport" split, it has 3 step for doing 3 different tasks -->
+		<!-- that are "backupStep", "cleanupStep" and "reportLeader"/"reportManager". -->
 		<batch:split id="backupAndReport">
 			<batch:flow>
-				<!--- Moving zip file(s) to backup folder --->
+				<!-- Moving zip file(s) to backup folder -->
 				<batch:step id="backupStep">
 					<batch:tasklet ref="backupTasklet" />
 				</batch:step>
