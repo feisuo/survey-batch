@@ -19,18 +19,18 @@
 
 	<batch:job id="surveyReport">
 
-		<!--- Defining "deacompressData" step for decompressing zip files. --->
-		<!--- If this step is success, it go to "import" step. --->
-		<!--- Others it will go to "reportError" step. --->
+		<!-- Defining "deacompressData" step for decompressing zip files. -->
+		<!-- If this step is success, it go to "import" step. -->
+		<!-- Others it will go to "reportError" step. -->
 		<batch:step id="deacompressData">
 			<batch:tasklet ref="deacompressTasklet" />
 			<batch:next on="COMPLETED" to="importData" />
 			<batch:next on="*" to="reportError" />
 		</batch:step>
-		<!--- After decompressing file successfully, "importData" step will import data --->
-		<!--- that are reading data from cvs file and writing item into DB(Database).--->
-		<!--- If state of this step is COMPLETED, it go to "backupAndReport" split. --->
-		<!--- Going to "reportError" step with others state. --->
+		<!-- After decompressing file successfully, "importData" step will import data -->
+		<!-- that are reading data from cvs file and writing item into DB(Database). -->
+		<!-- If state of this step is COMPLETED, it go to "backupAndReport" split.  -->
+		<!-- Going to "reportError" step with others state. -->
 		<batch:step id="importData">
 			<batch:tasklet>
 				<batch:chunk reader="multiResourceItemReader" writer="hibernatesurveyWriter"
@@ -64,14 +64,14 @@
 			</batch:flow>
 				
 			<batch:flow>
-				<!--- Cleaning cvs file(s) in input folder --->
+				<!-- Cleaning cvs file(s) in input folder -->
 				<batch:step id="cleanupStep">
 					<batch:tasklet ref="cleanupTasklet" />
 				</batch:step>
 			</batch:flow>
 
 			<batch:flow>
-				<!--- The "reportLeader" step is doing about reading data from DB and sending mail to leader. --->
+				<!-- The "reportLeader" step is doing about reading data from DB and sending mail to leader. -->
 				<batch:step id="reportLeader" next="reportManager">
 					<batch:tasklet>
 						<batch:chunk reader="leaderItemReader" writer="mailItemWriter"
@@ -79,7 +79,7 @@
 						</batch:chunk>
 					</batch:tasklet>
 				</batch:step>
-				<!--- The "reportManager" step is doing about reading data from DB and sending mail to Manager. --->
+				<!-- The "reportManager" step is doing about reading data from DB and sending mail to Manager. -->
 				<batch:step id="reportManager">
 					<batch:tasklet>
 						<batch:chunk reader="managerItemReader" writer="mailItemWriter"
@@ -89,7 +89,7 @@
 				</batch:step>
 			</batch:flow>
 		</batch:split>
-		<!--- The "reportError" step is sending mail to Administrator for reporting about error(s). --->
+		<!-- The "reportError" step is sending mail to Administrator for reporting about error(s). -->
 		<batch:step id="reportError">
 			<batch:tasklet>
 				<batch:chunk reader="errorItemReader" writer="mailItemWriter"
@@ -98,18 +98,18 @@
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
-	<!--- declare and configure SurveyDecompressTasklet --->
+	<!-- declare and configure SurveyDecompressTasklet -->
 	<bean id="deacompressTasklet" class="com.mulodo.survey.batch.tasklet.SurveyDecompressTasklet">
 		<property name="resource" value="file:${zip_folder}" />
 		<property name="targetDirectory" value="${csv_folder}" />
 	</bean>
-	<!---- Reading csv file(s) in csv_folder folder ----->
+	<!-- Reading csv file(s) in csv_folder folder -->
 	<bean id="multiResourceItemReader" scope="step"
 		class="org.springframework.batch.item.file.MultiResourceItemReader">
 		<property name="resources" value="file:${csv_folder}/*.csv" />
 		<property name="delegate" ref="cvsFileItemReader" />
 	</bean>
-	<!--- Declare and configure FlatFileItemReader --->
+	<!-- Declare and configure FlatFileItemReader -->
 	<bean id="cvsFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
 		<property name="lineMapper">
 			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -125,7 +125,7 @@
 			</bean>
 		</property>
 	</bean>
-	<!--- Defining backupTasklet bean with SurveyBackupTasklet class --->
+	<!-- Defining backupTasklet bean with SurveyBackupTasklet class -->
 	<bean id="backupTasklet" class="com.mulodo.survey.batch.tasklet.SurveyBackupTasklet">
 		<property name="fromDirectory" value="file:${zip_folder}" />
 		<property name="toDirectory" value="file:${backup_folder}" />
@@ -135,7 +135,7 @@
 		<property name="cleanupDirectory" value="${csv_folder}" />
 	</bean>
 	
-	<!--- Declare hibernateItemWriter for insert/update item into database --->
+	<!-- Declare hibernateItemWriter for insert/update item into database -->
 	<bean id="hibernatesurveyWriter"
 		class="org.springframework.batch.item.database.HibernateItemWriter">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -146,7 +146,7 @@
 		abstract="true">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	<!--- The "leaderItemReader" bean has inherit from "jdbcAbtractItemReader" bean --->
+	<!-- The "leaderItemReader" bean has inherit from "jdbcAbtractItemReader" bean -->
 	<bean id="leaderItemReader" parent="jdbcAbtractItemReader">
 		<property name="sql" value="${leader_sql}" />
 		<property name="rowMapper">
@@ -155,7 +155,7 @@
 			</bean>
 		</property>
 	</bean>
-	<!--- The "managerItemReader" bean has inherit from "jdbcAbtractItemReader" bean --->
+	<!-- The "managerItemReader" bean has inherit from "jdbcAbtractItemReader" bean -->
 	<bean id="managerItemReader" parent="jdbcAbtractItemReader">
 		<property name="sql" value="${manager_sql}" />
 		<property name="rowMapper">
@@ -174,7 +174,7 @@
 			</bean>
 		</property>
 	</bean>
-	<!--- Define mailItemWriter bean for writing mail --->
+	<!-- Define mailItemWriter bean for writing mail -->
 	<bean id="mailItemWriter"
 		class="org.springframework.batch.item.mail.SimpleMailMessageItemWriter">
 		<property name="mailSender" ref="mailSender" />
@@ -185,7 +185,7 @@
 		class="com.mulodo.survey.batch.processor.ReportMailItemProcessor" />
 
 	<bean id="loggingMailErrorHandler" class="com.mulodo.survey.batch.error.TestMailErrorHandler" />
-	<!--- Declare "mailSender" just to send mail --->
+	<!-- Declare "mailSender" just to send mail -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.mail.yahoo.com" />
 		<property name="port" value="587" />
