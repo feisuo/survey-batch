@@ -26,7 +26,7 @@ Open `config.properties` and config.
     + `email.port`: Port of mail service
     + `email.username` & `email.password`: User name & password to access mail service
 
-## Init DB
+## Initialize DB
   + Create schemas for store survey data and job repository
   + Execute `survey_create.sql` script to create tables need to run program
 
