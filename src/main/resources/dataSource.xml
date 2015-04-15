@@ -16,7 +16,8 @@
 		<property name="username" value="${ds.username}" />
 		<property name="password" value="${ds.password}" />
 	</bean>
-	<!-- Create "dataSourceJobRepo" bean for storing anything about Spring Batch (Job/Step Execution, context, etc) -->
+	<!-- Create "dataSourceJobRepo" bean for storing anything about Spring Batch 
+		(Job/Step Execution, context, etc) -->
 	<bean id="dataSourceJobRepo" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${ds.driver}" />
@@ -24,10 +25,10 @@
 		<property name="username" value="${ds.username}" />
 		<property name="password" value="${ds.password}" />
 	</bean>
-	<!-- This is sql script of "dataSourceJobRepo" that Spring Batch already provide us -->
+	<!-- This is sql script of "dataSourceJobRepo" that Spring Batch already 
+		provide us -->
 	<jdbc:initialize-database data-source="dataSourceJobRepo">
-		<jdbc:script
-			location="${job_repo.create_script}" />
 		<jdbc:script location="${job_repo.drop_script}" />
+		<jdbc:script location="${job_repo.create_script}" />
 	</jdbc:initialize-database>
 </beans>

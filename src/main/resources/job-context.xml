@@ -19,10 +19,10 @@
 
 	<batch:job id="surveyReport">
 
-		<!-- Defining "deacompressData" step for decompressing zip files. -->
+		<!-- Defining "decompressData" step for decompressing zip files. -->
 		<!-- If this step is success, it go to "import" step. -->
 		<!-- Others it will go to "reportError" step. -->
-		<batch:step id="deacompressData">
+		<batch:step id="decompressData">
 			<batch:tasklet ref="deacompressTasklet" />
 			<batch:next on="COMPLETED" to="importData" />
 			<batch:next on="*" to="reportError" />
@@ -187,10 +187,10 @@
 	<bean id="loggingMailErrorHandler" class="com.mulodo.survey.batch.error.TestMailErrorHandler" />
 	<!-- Declare "mailSender" just to send mail -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.mail.yahoo.com" />
-		<property name="port" value="587" />
-		<property name="username" value="repost_survey@yahoo.com.vn" />
-		<property name="password" value="matkhau123" />
+		<property name="host" value="${email.host}" />
+		<property name="port" value="${email.port}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
