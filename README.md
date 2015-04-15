@@ -8,6 +8,7 @@ Build, set up & run
 **survey-batch** use `Spring Batch` & `Maven` to minimize spend coding time.
 ## Build
 To build all, execute from the top level directory:
+
   `$ mvn clean install`
 ## Setup
 Open `config.properties` and config.
