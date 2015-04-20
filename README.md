@@ -39,13 +39,13 @@ To build, execute from the top level directory:
 
 Best result when IMPORT use JDBC:
 
-| Chunk size | Record | Duration 1st | Duaration 2nd | Duration 3rd |
+| Chunk size | Record | Duration 1st | 2nd | 3rd |
 | ---------- | ------ |	------------ | ------------- | ------------ |
 | 100000 | 1000000 |	32,664 ms |	34,613 ms	| 36,625 ms |
 
 Best result when COPY use JDBC:
 
-| Chunk size | Pagesize | Record | Duration 1st | Duaration 2nd | Duration 3rd |
+| Chunk size | Pagesize | Record | Duration 1st | 2nd | 3rd |
 | ---------- | -------- | ------ | ------------ | ------------- | ------------ |
 | 50000 | 100000 |	1000000 |	33,150 ms	| 34,711 ms | 36,080 36 ms |
 
