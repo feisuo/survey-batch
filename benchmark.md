@@ -1,5 +1,7 @@
 ##Benchmark result
 
+Import and copy *1.000.000* records
+
 ###Import use Hibernate
 
 | Chunk size | Record | Duration 1st (ms) | 2nd | 3rd |
