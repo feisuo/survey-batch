@@ -26,7 +26,8 @@ Import and copy *1.000.000* records
 | 50000 | 100000 |	1000000 |	363,559	| 347,464 | 349,948 |
 
 ###Copy use JDBC
- Note: Basing on "Import use JDBC", we have gotten best chunk size for using that is 20000.
+ Note: Basing on "Import use JDBC", we have gotten best chunk size for using that is 20000 
+ 
 | Chunk size | Page size | Record | Duration 1st (ms) | 2nd | 3rd |
 | ------------- | ------------- |	------------- |	-------------	| ------------- | ------------- |
 | 20000 | 20000 |	1000000 |	33,958	| 32,273 | 32,678 |
@@ -45,7 +46,8 @@ Import and copy *7.000.000* records
 | 200000 | 1000000 |	239,140 |	33,785	| 276,402 |
 
 ###Copy use JDBC
- Note: Basing on "Import use JDBC", we have gotten best chunk size for using that is 20000.
+ Note: Basing on "Import use JDBC", we have gotten best chunk size for using that is 20000
+ 
 | Chunk size | Page size | Record | Duration 1st (ms) | 2nd | 3rd |
 | ------------- | ------------- |	------------- |	-------------	| ------------- | ------------- |
 | 20000 | 20000 |	1000000 |	288,895	| 272,205 | 220,194 |
