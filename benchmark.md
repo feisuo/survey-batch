@@ -55,5 +55,5 @@ Import and copy *7.000.000* records
 | 20000 | 100000 |	1000000 |	241,023 | 223,739 | 224,976 |
 
 ## Conlusion 
- + After benchmark, we see the results of *1000000* records and *7000000* records that are almostly equivalent about executing time (In the *7000000*  record, if it's in import/copy processing, it's almostly same with *100000* resord).
- + Then we had get the best using size(s) for chunk/page size that are *20000*/*60000*.
+ + After benchmark, we see the results of **1000000** records and **7000000** records that are almostly equivalent about executing time (In the **7000000**  record, if it's in import/copy processing, it's almostly same with **100000** resord).
+ + Then we had get the best using size(s) for chunk/page size that are **20000**/**60000**.
